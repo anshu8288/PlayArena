@@ -17,9 +17,9 @@ public class User {
     private String email;
     private String userName;
     private String password;
-    private String role; // (user/admin)
-
+    private UserRole role; // user/admin
     // empty constructor
+
     public User() {
     }
 
@@ -49,7 +49,7 @@ public class User {
         return password;
     }
 
-    public String getRole() {
+    public UserRole getRole() {
         return role;
     }
 
@@ -70,7 +70,7 @@ public class User {
         this.password = password;
     }
 
-    public void setRole(String role) {
+    public void setRole(UserRole role) {
         this.role = role;
     }
 }
