@@ -41,6 +41,9 @@ public class SlotService {
     }
 
     public List<Slot> findByArenaIdOrderByStartTime(Integer arenaId) {
+        if (!arenaRepo.existsById(arenaId)) {
+            throw new RuntimeException("Invalid arena_id");
+        }
         return slotRepo.findByArenaIdOrderByStartTime(arenaId);
     }
 

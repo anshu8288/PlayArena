@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.anshu.PlayArena.slot.Slot;
+
 @RestController
 @RequestMapping("/arena")
 public class ArenaController {
@@ -28,9 +30,9 @@ public class ArenaController {
         return arenaService.getAllArenas();
     }
 
-    @GetMapping("/{id}")
-    Arena getArenaById(@PathVariable Integer id) {
-        return arenaService.getArenaById(id);
+    @GetMapping("/{arenaId}")
+    List<Slot> findSlotsByArenaId(@PathVariable Integer arenaId) {
+        return arenaService.findSlotsByArenaId(arenaId);
     }
 
 }

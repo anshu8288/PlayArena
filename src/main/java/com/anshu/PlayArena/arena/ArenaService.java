@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.anshu.PlayArena.slot.Slot;
 import com.anshu.PlayArena.slot.SlotService;
 
 import jakarta.annotation.PostConstruct;
@@ -78,9 +79,8 @@ public class ArenaService {
         return arenaRepo.findAll();
     }
 
-    public Arena getArenaById(Integer id) {
-        return arenaRepo.findById(id)
-                .orElse(null);
+    public List<Slot> findSlotsByArenaId(Integer id) {
+        return slotService.findByArenaIdOrderByStartTime(id);
     }
 
 }

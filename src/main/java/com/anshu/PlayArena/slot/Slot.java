@@ -13,8 +13,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "slots")
 public class Slot {
 
@@ -42,41 +46,41 @@ public class Slot {
         this.status = status;
     }
 
-    // getters & setters
-    public Integer getId() {
-        return id;
-    }
+    // // getters & setters
+    // public Integer getId() {
+    // return id;
+    // }
 
-    public LocalTime getStartTime() {
-        return startTime;
-    }
+    // public LocalTime getStartTime() {
+    // return startTime;
+    // }
 
-    public void setStartTime(LocalTime startTime) {
-        this.startTime = startTime;
-    }
+    // public void setStartTime(LocalTime startTime) {
+    // this.startTime = startTime;
+    // }
 
-    public LocalTime getEndTime() {
-        return endTime;
-    }
+    // public LocalTime getEndTime() {
+    // return endTime;
+    // }
 
-    public void setEndTime(LocalTime endTime) {
-        this.endTime = endTime;
-    }
+    // public void setEndTime(LocalTime endTime) {
+    // this.endTime = endTime;
+    // }
 
-    public SlotStatus getStatus() {
-        return status;
-    }
+    // public SlotStatus getStatus() {
+    // return status;
+    // }
 
-    public void setStatus(SlotStatus status) {
-        this.status = status;
-    }
+    // public void setStatus(SlotStatus status) {
+    // this.status = status;
+    // }
 
-    public Arena getArena() {
-        return arena;
-    }
+    // public Arena getArena() {
+    // return arena;
+    // }
 
-    public void setArena(Arena arena) {
-        this.arena = arena;
-    }
+    // public void setArena(Arena arena) {
+    // this.arena = arena;
+    // }
 
 }
