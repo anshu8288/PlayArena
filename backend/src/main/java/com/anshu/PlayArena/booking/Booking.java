@@ -21,8 +21,8 @@ import jakarta.persistence.Table;
 @Getter
 @Setter
 @Table(name = "bookings")
-public class Booking {
 
+public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -41,12 +41,9 @@ public class Booking {
      * 
      * Consider bidirectional mapping (later stage)
      * In Slot:
-     * 
      * @OneToMany(mappedBy = "slot")
      * private List<Booking> bookings;
-     * 
      * 👉 Useful for:
-     * 
      * Fetch all bookings of a slot
      * Analytics
      * 
@@ -63,7 +60,6 @@ public class Booking {
      * cascade
      * 
      * @OneToOne(cascade = CascadeType.ALL)
-     * 
      * @JoinColumn(name = "payment_id")
      * private Payment payment;
      * 👉 Now: Save booking → payment auto saved

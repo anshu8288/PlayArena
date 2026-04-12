@@ -27,10 +27,14 @@ public class BookingService {
             throw new RuntimeException("Slot already booked");
         }
 
+        // HOLD the slot (important)
+        slot.setStatus(SlotStatus.LOCKED);
+        slotRepo.save(slot);
+
         Booking booking = new Booking();
+        booking.setUser(userRepo.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found")));
         booking.setSlot(slot);
-        booking.setUser(userRepo.findById(userId).get());
-        booking.setPayment(null);
         booking.setStatus(BookingStatus.PENDING);
 
         return bookingRepo.save(booking);

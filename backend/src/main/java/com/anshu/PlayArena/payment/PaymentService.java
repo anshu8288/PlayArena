@@ -19,7 +19,7 @@ public class PaymentService {
         this.paymentRepo = paymentRepo;
     }
 
-    public Payment makePayment(Integer bookingId) {
+    public Payment createPaymentOrder(Integer bookingId) {
 
         Booking booking = bookingRepo.findById(bookingId)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));

@@ -24,7 +24,7 @@ public class User {
     }
 
     // constructor
-    public User(Integer id, String email, String userName, String password, String role) {
+    public User(Integer id, String email, String userName, String password, UserRole role) {
         this.id = id;
         this.email = email;
         this.userName = userName;
