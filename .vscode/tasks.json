@@ -1,0 +1,51 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "User Service",
+      "type": "shell",
+      "command": "mvn spring-boot:run",
+      "options": {
+        "cwd": "${workspaceFolder}/user-service"
+      },
+      "isBackground": true
+    },
+    {
+      "label": "Booking Service",
+      "type": "shell",
+      "command": "mvn spring-boot:run",
+      "options": {
+        "cwd": "${workspaceFolder}/booking-service"
+      },
+      "isBackground": true
+    },
+    {
+      "label": "Payment Service",
+      "type": "shell",
+      "command": "mvn spring-boot:run",
+      "options": {
+        "cwd": "${workspaceFolder}/payment-service"
+      },
+      "isBackground": true
+    },
+    {
+      "label": "Frontend",
+      "type": "shell",
+      "command": "npm start",
+      "options": {
+        "cwd": "${workspaceFolder}/frontend"
+      },
+      "isBackground": true
+    },
+    {
+      "label": "Run All",
+      "dependsOn": [
+        "User Service",
+        "Booking Service",
+        "Payment Service",
+        "Frontend"
+      ],
+      "dependsOrder": "parallel"
+    }
+  ]
+}
