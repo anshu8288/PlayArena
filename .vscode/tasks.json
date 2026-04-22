@@ -38,8 +38,19 @@
       "isBackground": true
     },
     {
+      "label": "Kafka",
+      "type": "shell",
+      "command": "docker.exe compose up -d",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
       "label": "Run All",
       "dependsOn": [
+        "Kafka",
         "User Service",
         "Booking Service",
         "Payment Service",

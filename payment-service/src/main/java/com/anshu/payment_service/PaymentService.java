@@ -1,55 +1,61 @@
 package com.anshu.payment_service;
 
 import java.util.List;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 public class PaymentService {
 
+    private static final Logger log = LoggerFactory.getLogger(PaymentService.class);
+
     private final PaymentRepo paymentRepo;
+    private final KafkaTemplate<String, PaymentEvent> kafkaTemplate;
 
-    // Booking service URL
-    private static final String BOOKING_SERVICE_URL = "http://localhost:8082";
-
-    public PaymentService(PaymentRepo paymentRepo) {
+    public PaymentService(PaymentRepo paymentRepo, KafkaTemplate<String, PaymentEvent> kafkaTemplate) {
         this.paymentRepo = paymentRepo;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     public Payment createPaymentOrder(Integer bookingId) {
-        RestTemplate restTemplate = new RestTemplate();
-
-        // Verify booking exists by calling booking-service
-        try {
-            String bookingUrl = BOOKING_SERVICE_URL + "/booking/" + bookingId;
-            restTemplate.getForObject(bookingUrl, Object.class);
-        } catch (Exception e) {
-            throw new RuntimeException("Booking not found: " + e.getMessage());
-        }
-
         Payment payment = new Payment();
         payment.setBookingId(bookingId);
-        payment.setAmount(0.0); // Amount should be fetched from booking service or set by caller
+        payment.setAmount(200.0); // Amount should be fetched from booking service or set by caller
         payment.setStatus(PaymentStatus.PENDING);
 
         Payment savedPayment = paymentRepo.save(payment);
 
-        // payments service is setting the status of booking to SUCCESS here
-        try {
-            String confirmUrl = BOOKING_SERVICE_URL + "/booking/" + bookingId + "/confirm-payment/"
-                    + savedPayment.getId();
-            restTemplate.postForObject(confirmUrl, null, Object.class);
-            savedPayment.setStatus(PaymentStatus.SUCCESS);
-            return paymentRepo.save(savedPayment);
-        } catch (Exception e) {
-            savedPayment.setStatus(PaymentStatus.FAILURE);
-            paymentRepo.save(savedPayment);
-            throw new RuntimeException("Payment created but booking confirmation failed: " + e.getMessage());
-        }
+        savedPayment.setStatus(PaymentStatus.SUCCESS);
+        paymentRepo.save(savedPayment);
+
+        publishPaymentEvent(savedPayment.getId(), bookingId, "SUCCESS");
+        return savedPayment;
     }
 
     public List<Payment> getAllPayments() {
         return paymentRepo.findAll();
+    }
+
+    private void publishPaymentEvent(Integer paymentId, Integer bookingId, String status) {
+        PaymentEvent event = new PaymentEvent();
+        event.setBookingId(bookingId);
+        event.setPaymentId(paymentId);
+        event.setStatus(status);
+
+        try {
+            kafkaTemplate.send("payment-topic", event).whenComplete((result, ex) -> {
+                if (ex != null) {
+                    log.warn("Kafka publish failed for paymentId={}, bookingId={}, status={}", paymentId, bookingId,
+                            status, ex);
+                } else {
+                    log.info("Kafka publish succeeded for paymentId={}, bookingId={}", paymentId, bookingId);
+                }
+            });
+        } catch (Exception ex) {
+            log.warn("Kafka publish failed immediately for paymentId={}, bookingId={}, status={}", paymentId,
+                    bookingId, status, ex);
+        }
     }
 }
